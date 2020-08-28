@@ -1,0 +1,78 @@
+FROM nvidia/cuda:11.0-runtime-ubuntu20.04
+
+#----------------------------------------
+# Install python3.8 + pip3 and make them default
+#----------------------------------------
+RUN apt update && apt install --no-install-recommends -y python3.8 python3-pip \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 \
+    && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3
+
+#----------------------------------------
+# Install some ubuntu stuff (gcc, make, etc.)
+#----------------------------------------
+RUN apt install -y --no-install-recommends \
+    bash \
+    build-essential \
+    apt-utils \
+    ca-certificates \
+    htop \
+    wget \
+    git \
+    vim \
+    libssl-dev \
+    curl \
+    unzip \
+    unrar \
+    aria2 \
+    pbzip2 \
+    pigz
+
+#----------------------------------------
+# Install cmake & boost
+#----------------------------------------
+RUN git clone --depth 10 https://github.com/Kitware/CMake ~/cmake && \
+    cd ~/cmake && \
+    ./bootstrap && \
+    make -j"$(nproc)" install && \
+    wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.tar.gz && \
+    tar -zxf ~/boost.tar.gz -C ~ && \
+    cd ~/boost_* && \
+    ./bootstrap.sh --with-python=python3.8 && \
+    ./b2 install -j"$(nproc)" --prefix=/usr/local
+
+#----------------------------------------
+# Install python libs and stuff
+#----------------------------------------
+RUN python -m pip --no-cache-dir install --upgrade \
+    pip \
+    setuptools \
+    numpy \
+    scipy \
+    pandas \
+    pyarrow \
+    numba \
+    cloudpickle \
+    scikit-learn \
+    matplotlib \
+    Cython \
+    jupyter \
+    jupyterlab \
+
+#----------------------------------------
+# Install pytorch, tensorflow, jax, haiku, trax and nlp libraries
+#----------------------------------------
+RUN python -m pip --no-cache-dir install --upgrade \
+    torch torchvision \
+    tensorflow \
+    https://storage.googleapis.com/jax-releases/`nvcc -V | sed -En "s/.* release ([0-9]*)\.([0-9]*),.*/cuda\1\2/p"`/jaxlib-0.1.52-`python -V | sed -En "s/Python ([0-9]*)\.([0-9]*).*/cp\1\2/p"`-none-manylinux2010_x86_64.whl \
+    jax flax trax git+https://github.com/deepmind/dm-haiku \
+    transformers nlp \
+    pytorch_lightning
+
+#----------------------------------------
+# Install better shell
+#----------------------------------------
+RUN apt install -y bash && \
+    chsh -s /bin/bash root && \
+    curl -fsSL https://starship.rs/install.sh | bash
+
