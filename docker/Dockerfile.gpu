@@ -1,4 +1,5 @@
-FROM nvidia/cuda:11.0-runtime-ubuntu20.04
+ARG NVIDIA_CUDA_IMAGE=nvidia/cuda:11.0-runtime-ubuntu20.04
+FROM ${NVIDIA_CUDA_IMAGE}
 ENV DEBIAN_FRONTEND="noninteractive"
 #----------------------------------------
 # Install python3.8 + pip3 and make them default
@@ -45,7 +46,8 @@ RUN wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.74.0/source
 #----------------------------------------
 RUN python -m pip --no-cache-dir install --upgrade \
     pip \
-    setuptools \
+    setuptools && \
+    python -m pip --no-cache-dir install --upgrade \
     numpy \
     scipy \
     pandas \
@@ -61,16 +63,17 @@ RUN python -m pip --no-cache-dir install --upgrade \
 #----------------------------------------
 # Install prerequrements
 #----------------------------------------
-RUN apt install -y python3-pygame liblapacke-dev
+RUN apt install -y liblapacke-dev openssh-client
 
 #----------------------------------------
 # Install pytorch, tensorflow, jax, haiku, trax and nlp libraries
 #----------------------------------------
+ARG JAX_CUDA_VER=cuda110
 RUN python -m pip --no-cache-dir install --upgrade \
     torch torchvision \
     tensorflow \
-    https://storage.googleapis.com/jax-releases/cuda110/jaxlib-0.1.52-`python -V | sed -En "s/Python ([0-9]*)\.([0-9]*).*/cp\1\2/p"`-none-manylinux2010_x86_64.whl \
-    jax flax trax git+https://github.com/deepmind/dm-haiku \
+    https://storage.googleapis.com/jax-releases/$JAX_CUDA_VER/jaxlib-0.1.52-`python -V | sed -En "s/Python ([0-9]*)\.([0-9]*).*/cp\1\2/p"`-none-manylinux2010_x86_64.whl \
+    jax \
     transformers nlp \
     pytorch_lightning
 
@@ -92,6 +95,15 @@ RUN jupyter notebook --generate-config && \
     jupyter nbextension enable --py widgetsnbextension && \
     jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
     echo "c.NotebookApp.password = 'sha1:e38cb960008a:2d7c7b65a110ab5b94b3e4a8c98a8c274c9387a2'" > ~/.jupyter/jupyter_notebook_config.py 
+
+#---------------------------------------
+# Cleanup
+#---------------------------------------
+RUN ldconfig && \
+    apt-get clean && \
+    apt-get autoremove && \
+    rm -rf /var/lib/apt/lists/* /tmp/* ~/* && \
+    rm -rf ~/boost* ~/install.sh 
 
 #---------------------------------------
 # Finalizing
