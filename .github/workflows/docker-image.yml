@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  build-deploy-cuda110:
+  cuda11.0:
 
     runs-on: ubuntu-latest
 
@@ -25,7 +25,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
   
-  build-deploy-cuda100:
+  cuda10.0:
 
     runs-on: ubuntu-latest
 
@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
   
-  build-deploy-cuda101:
+  cuda10.1:
 
     runs-on: ubuntu-latest
 
@@ -65,7 +65,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
-  build-deploy-cuda102:
+  cuda10.2:
 
     runs-on: ubuntu-latest
 
@@ -81,6 +81,26 @@ jobs:
            --build-arg TF_PACKAGE=tensorflow .
     - name: Push cuda 10.2 to dockerhub
       run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cu102
+      env:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+  
+  cpu:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the cpu-only Docker image
+      run: >
+           docker build --file docker/Dockerfile 
+           --tag rexhaif/ml-toolbox:cpu
+           --build-arg BASE_IMAGE=ubuntu:20.04 
+           --build-arg JAX_PACKAGE=jaxlib
+           --build-arg PYTORCH_PACKAGE="torch==1.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html"
+           --build-arg TF_PACKAGE="https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow_cpu-2.3.0-cp38-cp38-manylinux2010_x86_64.whl" .
+    - name: Push cpu-only image to dockerhub
+      run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cpu
       env:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
