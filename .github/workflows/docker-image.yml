@@ -76,7 +76,7 @@ jobs:
            --tag rexhaif/ml-toolbox:cu102
            --build-arg BASE_IMAGE=nvidia/cuda:10.2-runtime-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda102/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
-           --build-arg PYTORCH_PACKAGE="torch==1.6.0+cu102 -f https://download.pytorch.org/whl/torch_stable.html"
+           --build-arg PYTORCH_PACKAGE="torch==1.6.0"
            --build-arg TF_PACKAGE=tensorflow .
     - name: Push cuda 10.2 to dockerhub
       run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cu102
