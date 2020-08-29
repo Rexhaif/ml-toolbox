@@ -68,11 +68,11 @@ RUN apt install -y liblapacke-dev openssh-client
 #----------------------------------------
 # Install pytorch, tensorflow, jax, haiku, trax and nlp libraries
 #----------------------------------------
-ARG JAX_CUDA_VER=cuda110
-RUN python -m pip --no-cache-dir install --upgrade \
-    torch torchvision \
+ARG CUDA_VER=cuda110
+RUN python -m pip --no-cache-dir install -f https://download.pytorch.org/whl/torch_stable.html --upgrade \
+    torch==1.6.0+$CUDA_VER torchvision \
     tensorflow \
-    https://storage.googleapis.com/jax-releases/$JAX_CUDA_VER/jaxlib-0.1.52-`python -V | sed -En "s/Python ([0-9]*)\.([0-9]*).*/cp\1\2/p"`-none-manylinux2010_x86_64.whl \
+    https://storage.googleapis.com/jax-releases/$CUDA_VER/jaxlib-0.1.52-`python -V | sed -En "s/Python ([0-9]*)\.([0-9]*).*/cp\1\2/p"`-none-manylinux2010_x86_64.whl \
     jax \
     transformers nlp \
     pytorch_lightning
