@@ -70,7 +70,7 @@ RUN apt install -y liblapacke-dev libsuitesparse-dev openssh-client
 #----------------------------------------
 # Pytorch
 ARG PYTORCH_PACKAGE=torch
-RUN python -m pip --no-cache-dir install -f --upgrade $PYTORCH_PACKAGE
+RUN python -m pip --no-cache-dir install --upgrade $PYTORCH_PACKAGE
 
 # Tensorflow
 ARG TF_PACKAGE=tensorflow
