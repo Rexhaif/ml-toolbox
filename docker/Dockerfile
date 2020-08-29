@@ -96,7 +96,7 @@ RUN apt install -y bash && \
     echo 'eval "$(starship init bash)"' >> ~/.bashrc
 
 #---------------------------------------
-# Installing nodejs and configuring jupyterlab, default password is 'change-me-asap'
+# Installing nodejs and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
 RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - &&  apt install -y nodejs
 RUN jupyter notebook --generate-config && \
