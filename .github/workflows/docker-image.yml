@@ -1,8 +1,10 @@
-name: Docker Image CI
+name: Docker Images CI
 
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'docker/Dockerfile*'
   pull_request:
     branches: [ master ]
 
