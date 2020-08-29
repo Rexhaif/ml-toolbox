@@ -1,5 +1,5 @@
-ARG NVIDIA_CUDA_IMAGE=nvidia/cuda:11.0-runtime-ubuntu20.04
-FROM ${NVIDIA_CUDA_IMAGE}
+ARG BASE_IMAGE=nvidia/cuda:11.0-runtime-ubuntu20.04
+FROM ${BASE_IMAGE}
 ENV DEBIAN_FRONTEND="noninteractive"
 #----------------------------------------
 # Install python3.8 + pip3 and make them default
@@ -63,16 +63,25 @@ RUN python -m pip --no-cache-dir install --upgrade \
 #----------------------------------------
 # Install prerequrements
 #----------------------------------------
-RUN apt install -y liblapacke-dev openssh-client
+RUN apt install -y liblapacke-dev libsuitesparse-dev openssh-client
 
 #----------------------------------------
 # Install pytorch, tensorflow, jax, haiku, trax and nlp libraries
 #----------------------------------------
-ARG CUDA_VER=cuda110
-RUN python -m pip --no-cache-dir install -f https://download.pytorch.org/whl/torch_stable.html --upgrade \
-    torch==1.6.0+$CUDA_VER torchvision \
-    tensorflow \
-    https://storage.googleapis.com/jax-releases/$CUDA_VER/jaxlib-0.1.52-`python -V | sed -En "s/Python ([0-9]*)\.([0-9]*).*/cp\1\2/p"`-none-manylinux2010_x86_64.whl \
+# Pytorch
+ARG PYTORCH_PACKAGE=torch==1.6.0
+RUN python -m pip --no-cache-dir install -f https://download.pytorch.org/whl/torch_stable.html --upgrade $PYTORCH_PACKAGE
+
+# Tensorflow
+ARG TF_PACKAGE=tensorflow
+RUN python -m pip --no-cache-dir install --upgrade $TF_PACKAGE
+
+# Google's JAX
+ARG JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda110/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
+RUN python -m pip --no-cache-dir install --upgrade $JAX_PACKAGE
+
+# Other packages
+RUN python -m pip --no-cache-dir install --upgrade \
     jax \
     transformers nlp \
     pytorch_lightning
