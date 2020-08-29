@@ -69,8 +69,8 @@ RUN apt install -y liblapacke-dev libsuitesparse-dev openssh-client
 # Install pytorch, tensorflow, jax, haiku, trax and nlp libraries
 #----------------------------------------
 # Pytorch
-ARG PYTORCH_PACKAGE=torch==1.6.0
-RUN python -m pip --no-cache-dir install -f https://download.pytorch.org/whl/torch_stable.html --upgrade $PYTORCH_PACKAGE
+ARG PYTORCH_PACKAGE=torch
+RUN python -m pip --no-cache-dir install -f --upgrade $PYTORCH_PACKAGE
 
 # Tensorflow
 ARG TF_PACKAGE=tensorflow
