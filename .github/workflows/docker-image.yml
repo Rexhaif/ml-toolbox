@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build:
+  build-deploy-cuda110:
 
     runs-on: ubuntu-latest
 
@@ -18,6 +18,48 @@ jobs:
       run: docker build . --file docker/Dockerfile.gpu --tag rexhaif/ml-toolbox:latest --tag rexhaif/ml-toolbox:cu110
     - name: Push cuda 11.0 to dockerhub
       run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:latest && docker push rexhaif/ml-toolbox:cu110
+      env:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+  
+  build-deploy-cuda100:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the cuda 10.0 Docker image
+      run: docker build . --file docker/Dockerfile.gpu --tag rexhaif/ml-toolbox:cu100 --build-arg NVIDIA_CUDA_IMAGE=nvidia/cuda:10.0-runtime-ubuntu18.04 --build-arg JAX_CUDA_VER=cuda100
+    - name: Push cuda 10.0 to dockerhub
+      run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cu100
+      env:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+  
+  build-deploy-cuda101:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the cuda 10.1 Docker image
+      run: docker build . --file docker/Dockerfile.gpu --tag rexhaif/ml-toolbox:cu101 --build-arg NVIDIA_CUDA_IMAGE=nvidia/cuda:10.1-runtime-ubuntu18.04 --build-arg JAX_CUDA_VER=cuda101
+    - name: Push cuda 10.1 to dockerhub
+      run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cu101
+      env:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          
+  build-deploy-cuda102:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the cuda 10.2 Docker image
+      run: docker build . --file docker/Dockerfile.gpu --tag rexhaif/ml-toolbox:cu102 --build-arg NVIDIA_CUDA_IMAGE=nvidia/cuda:10.2-runtime-ubuntu18.04 --build-arg JAX_CUDA_VER=cuda102
+    - name: Push cuda 10.2 to dockerhub
+      run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cu102
       env:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
