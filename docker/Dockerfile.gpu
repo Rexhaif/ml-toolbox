@@ -1,11 +1,11 @@
 FROM nvidia/cuda:11.0-runtime-ubuntu20.04
-
+ENV DEBIAN_FRONTEND="noninteractive"
 #----------------------------------------
 # Install python3.8 + pip3 and make them default
 #----------------------------------------
-RUN apt update && apt install --no-install-recommends -y python3.8 python3-pip \
+RUN apt update && apt install --no-install-recommends -y python3.8 python3.8-dev python3-pip \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 \
-    && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3
+    && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
 #----------------------------------------
 # Install some ubuntu stuff (gcc, make, etc.)
@@ -33,11 +33,11 @@ RUN apt install -y --no-install-recommends \
 RUN git clone --depth 10 https://github.com/Kitware/CMake ~/cmake && \
     cd ~/cmake && \
     ./bootstrap && \
-    make -j"$(nproc)" install && \
-    wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.tar.gz && \
+    make -j"$(nproc)" install
+RUN wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.tar.gz && \
     tar -zxf ~/boost.tar.gz -C ~ && \
     cd ~/boost_* && \
-    ./bootstrap.sh --with-python=python3.8 && \
+    ./bootstrap.sh --with-python=/usr/local/bin/python3 --with-python-version=3.8 --with-python-root=/usr/local/lib/python3.8 && \
     ./b2 install -j"$(nproc)" --prefix=/usr/local
 
 #----------------------------------------
@@ -56,7 +56,12 @@ RUN python -m pip --no-cache-dir install --upgrade \
     matplotlib \
     Cython \
     jupyter \
-    jupyterlab \
+    jupyterlab
+
+#----------------------------------------
+# Install prerequrements
+#----------------------------------------
+RUN apt install -y python3-pygame liblapacke-dev
 
 #----------------------------------------
 # Install pytorch, tensorflow, jax, haiku, trax and nlp libraries
@@ -64,7 +69,7 @@ RUN python -m pip --no-cache-dir install --upgrade \
 RUN python -m pip --no-cache-dir install --upgrade \
     torch torchvision \
     tensorflow \
-    https://storage.googleapis.com/jax-releases/`nvcc -V | sed -En "s/.* release ([0-9]*)\.([0-9]*),.*/cuda\1\2/p"`/jaxlib-0.1.52-`python -V | sed -En "s/Python ([0-9]*)\.([0-9]*).*/cp\1\2/p"`-none-manylinux2010_x86_64.whl \
+    https://storage.googleapis.com/jax-releases/cuda110/jaxlib-0.1.52-`python -V | sed -En "s/Python ([0-9]*)\.([0-9]*).*/cp\1\2/p"`-none-manylinux2010_x86_64.whl \
     jax flax trax git+https://github.com/deepmind/dm-haiku \
     transformers nlp \
     pytorch_lightning
@@ -74,5 +79,26 @@ RUN python -m pip --no-cache-dir install --upgrade \
 #----------------------------------------
 RUN apt install -y bash && \
     chsh -s /bin/bash root && \
-    curl -fsSL https://starship.rs/install.sh | bash
+    wget -O ~/install.sh https://starship.rs/install.sh && \
+    bash ~/install.sh -y && \
+    echo 'eval "$(starship init bash)"' >> ~/.bashrc
 
+#---------------------------------------
+# Installing nodejs and configuring jupyterlab, default password is 'change-me-asap'
+#---------------------------------------
+RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - &&  apt install -y nodejs
+RUN jupyter notebook --generate-config && \
+    pip install ipywidgets && \ 
+    jupyter nbextension enable --py widgetsnbextension && \
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
+    echo "c.NotebookApp.password = 'sha1:e38cb960008a:2d7c7b65a110ab5b94b3e4a8c98a8c274c9387a2'" > ~/.jupyter/jupyter_notebook_config.py 
+
+#---------------------------------------
+# Finalizing
+#---------------------------------------
+RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data
+WORKDIR /workspace
+
+EXPOSE 6006 8888
+
+CMD jupyter notebook --no-browser --ip=0.0.0.0 --port=8888 --allow-root --notebook-dir='/workspace'
