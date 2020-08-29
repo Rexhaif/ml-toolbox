@@ -3,7 +3,13 @@ Useful docker images with cuda, Jupyter and ml/dl libraries(pytorch, tf, jax, tr
 
 ## Usage:
 ```bash
-docker run -d --name toolbox --gpus=all --ipc=host -v /some-large-storage:/workspace/data -v /some-fast-storage:/workspace/notebooks -p 8888:8888 -p 6006:6006 rexhaif/ml-toolbox:latest
+docker run -d 
+  --name toolbox 
+  --gpus=all --ipc=host 
+  -v /some-large-storage:/workspace/data 
+  -v /some-fast-storage:/workspace/notebooks 
+  -p 8888:8888 -p 6006:6006 
+rexhaif/ml-toolbox:latest
 ```
 - some-fast-storage stands for a directory in mount path of your ssd's, if you have one
 - some-large-storage stands for a directory in a mount path of your hdd/raid/nfs
