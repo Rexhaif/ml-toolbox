@@ -1,4 +1,4 @@
-# ml-toolbox ![Docker Image CI](https://github.com/Rexhaif/ml-toolbox/workflows/Docker%20Image%20CI/badge.svg)
+# ml-toolbox ![Docker Images CI](https://github.com/Rexhaif/ml-toolbox/workflows/Docker%20Images%20CI/badge.svg)
 Useful docker images with cuda, Jupyter and ml/dl libraries(pytorch, tf, jax, trax, haiku)
 
 ## Usage:
