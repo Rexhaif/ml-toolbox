@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the cuda 11.0 Docker image
-      run: docker build . --file docker/Dockerfile --tag rexhaif/ml-toolbox:latest --tag rexhaif/ml-toolbox:cu110
+      run: docker build --file docker/Dockerfile --tag rexhaif/ml-toolbox:latest --tag rexhaif/ml-toolbox:cu110 .
     - name: Push cuda 11.0 to dockerhub
       run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:latest && docker push rexhaif/ml-toolbox:cu110
       env:
@@ -32,12 +32,13 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the cuda 10.0 Docker image
       run: >
-        docker build . --file docker/Dockerfile 
-           --tag rexhaif/ml-toolbox:cu100 
-           --build-arg BASE_IMAGE=nvidia/cuda:10.0-runtime-ubuntu18.04 
+           docker build --file docker/Dockerfile
+           --tag rexhaif/ml-toolbox:cu100
+           --build-arg BASE_IMAGE=nvidia/cuda:10.0-runtime-ubuntu18.04
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda100/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
-           --build-arg PYTORCH_PACKAGE=torch==1.6.0+cu100
+           --build-arg PYTORCH_PACKAGE=torch==1.6.0+cu92 -f https://download.pytorch.org/whl/torch_stable.html
            --build-arg TF_PACKAGE=tensorflow
+            .
     - name: Push cuda 10.0 to dockerhub
       run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cu100
       env:
@@ -52,12 +53,13 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the cuda 10.1 Docker image
       run: >
-        docker build . --file docker/Dockerfile 
+           docker build --file docker/Dockerfile 
            --tag rexhaif/ml-toolbox:cu101 
            --build-arg BASE_IMAGE=nvidia/cuda:10.1-runtime-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda101/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
-           --build-arg PYTORCH_PACKAGE=torch==1.6.0+cu101
+           --build-arg PYTORCH_PACKAGE=torch==1.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
            --build-arg TF_PACKAGE=tensorflow
+            .
     - name: Push cuda 10.1 to dockerhub
       run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cu101
       env:
@@ -72,12 +74,13 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the cuda 10.2 Docker image
       run: >
-        docker build . --file docker/Dockerfile 
+           docker build --file docker/Dockerfile 
            --tag rexhaif/ml-toolbox:cu102
            --build-arg BASE_IMAGE=nvidia/cuda:10.2-runtime-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda102/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
-           --build-arg PYTORCH_PACKAGE=torch==1.6.0+cu102
+           --build-arg PYTORCH_PACKAGE=torch==1.6.0+cu102 -f https://download.pytorch.org/whl/torch_stable.html
            --build-arg TF_PACKAGE=tensorflow
+            .
     - name: Push cuda 10.2 to dockerhub
       run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cu102
       env:
