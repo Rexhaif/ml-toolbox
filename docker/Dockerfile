@@ -98,7 +98,7 @@ RUN apt install -y bash && \
 #---------------------------------------
 # Installing nodejs and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
-RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - &&  apt install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - &&  apt install -y --no-install-recommends nodejs
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
     jupyter nbextension enable --py widgetsnbextension && \
