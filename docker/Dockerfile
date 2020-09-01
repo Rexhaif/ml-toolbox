@@ -96,9 +96,9 @@ RUN apt install -y bash && \
     echo 'eval "$(starship init bash)"' >> ~/.bashrc
 
 #---------------------------------------
-# Installing nodejs and configuring jupyterlab, default password: 'change-me-asap'
+# Installing nodejs(and trying ignore one of anomal dependencies(python-minimal)) and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
-RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - &&  apt install -y --no-install-recommends nodejs
+RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - &&  apt install -y --no-install-recommends nodejs python-minimal-
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
     jupyter nbextension enable --py widgetsnbextension && \
