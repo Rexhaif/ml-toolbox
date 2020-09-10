@@ -14,6 +14,7 @@ RUN apt update && apt install --no-install-recommends -y python3.8 python3.8-dev
 RUN apt install -y --no-install-recommends \
     bash \
     build-essential \
+    libc6-dev \
     apt-utils \
     ca-certificates \
     htop \
@@ -96,15 +97,31 @@ RUN apt install -y bash && \
     echo 'eval "$(starship init bash)"' >> ~/.bashrc
 
 #---------------------------------------
-# Installing nodejs(and trying ignore one of anomal dependencies(python-minimal)) and configuring jupyterlab, default password: 'change-me-asap'
+# Installing nodejs via nvm and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
-RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - &&  apt install -y --no-install-recommends nodejs python-minimal-
+RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+RUN nvm install 14 && nvm use 14
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
     jupyter nbextension enable --py widgetsnbextension && \
     jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
-    echo "c.NotebookApp.password = 'sha1:e38cb960008a:2d7c7b65a110ab5b94b3e4a8c98a8c274c9387a2'" > ~/.jupyter/jupyter_notebook_config.py 
-
+    echo "c.NotebookApp.password = 'sha1:e38cb960008a:2d7c7b65a110ab5b94b3e4a8c98a8c274c9387a2'" > ~/.jupyter/jupyter_notebook_config.py
+    
+#---------------------------------------
+# Installing rust jupyter kernel
+#---------------------------------------
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+RUN URL="https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init" && \
+    wget "$URL" && \
+    chmod +x rustup-init && \
+    ./rustup-init -y --no-modify-path --default-toolchain nightly && \
+    rm rustup-init && \
+    chmod -R a+w $RUSTUP_HOME $CARGO_HOME && \
+    cargo install evcxr_jupyter && \
+    evcxr_jupyter --install
+    
 #---------------------------------------
 # Cleanup
 #---------------------------------------
