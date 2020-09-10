@@ -28,6 +28,8 @@ RUN apt install -y --no-install-recommends \
     aria2 \
     pbzip2 \
     pigz
+    
+SHELL ["/bin/bash", "-c"]
 
 #----------------------------------------
 # Install cmake & boost
