@@ -100,6 +100,7 @@ RUN apt install -y bash && \
 # Installing nodejs via nvm and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
 RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+RUN export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
 RUN nvm install 14 && nvm use 14
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
