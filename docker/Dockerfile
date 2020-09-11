@@ -91,10 +91,14 @@ RUN apt install -y bash && \
 # Installing nodejs via nvm and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
 ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 14.10.1
 RUN mkdir -p $NVM_DIR && wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash && \
     source $NVM_DIR/nvm.sh && \
-    nvm install 14 && \
-    nvm use 14
+    nvm install $NODE_VERSION && \
+    nvm use $NODE_VERSION
+ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
     jupyter nbextension enable --py widgetsnbextension && \
