@@ -91,7 +91,7 @@ RUN apt install -y bash && \
 # Installing nodejs via nvm and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
 ENV NVM_DIR /usr/local/nvm
-RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash && \
+RUN mkdir -p $NVM_DIR && wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash && \
     source $NVM_DIR/nvm.sh && \
     nvm install 14 && \
     nvm use 14
