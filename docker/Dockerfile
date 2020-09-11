@@ -27,20 +27,9 @@ RUN apt install -y --no-install-recommends \
     unrar \
     aria2 \
     pbzip2 \
-    pigz
-
-#----------------------------------------
-# Install cmake & boost
-#----------------------------------------
-RUN git clone --depth 10 https://github.com/Kitware/CMake ~/cmake && \
-    cd ~/cmake && \
-    ./bootstrap && \
-    make -j"$(nproc)" install
-RUN wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.tar.gz && \
-    tar -zxf ~/boost.tar.gz -C ~ && \
-    cd ~/boost_* && \
-    ./bootstrap.sh --with-python=/usr/local/bin/python3 --with-python-version=3.8 --with-python-root=/usr/local/lib/python3.8 && \
-    ./b2 install -j"$(nproc)" --prefix=/usr/local
+    pigz \
+    cmake \
+    libboost-all-dev
 
 #----------------------------------------
 # Install python libs and stuff
@@ -100,7 +89,7 @@ RUN apt install -y bash && \
 # Installing nodejs via nvm and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
 RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-RUN export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+RUN export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \. ~/.bashrc
 RUN nvm install 14 && nvm use 14
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
@@ -130,7 +119,7 @@ RUN ldconfig && \
     apt-get clean && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/* /tmp/* ~/* && \
-    rm -rf ~/boost* ~/install.sh 
+    rm -rf  ~/install.sh 
 
 #---------------------------------------
 # Finalizing
