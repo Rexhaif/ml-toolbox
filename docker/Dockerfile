@@ -2,9 +2,13 @@ ARG BASE_IMAGE=nvidia/cuda:11.0-runtime-ubuntu20.04
 FROM ${BASE_IMAGE}
 ENV DEBIAN_FRONTEND="noninteractive"
 #----------------------------------------
-# Install python3.8 + pip3 and make them default
+# Install latest python3.8 + pip3 and make them default
 #----------------------------------------
-RUN apt update && apt install --no-install-recommends -y python3.8 python3.8-dev python3-pip \
+RUN apt update \
+    && apt install -y --no-install-recommends software-properties-common \
+    && add-apt-repository --yes ppa:deadsnakes/ppa \
+    && apt update \
+    && apt install --no-install-recommends -y python3.8 python3.8-dev python3-pip \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 \
     && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
