@@ -2,9 +2,13 @@ ARG BASE_IMAGE=nvidia/cuda:11.0-runtime-ubuntu20.04
 FROM ${BASE_IMAGE}
 ENV DEBIAN_FRONTEND="noninteractive"
 #----------------------------------------
-# Install python3.8 + pip3 and make them default
+# Install latest python3.8 + pip3 and make them default
 #----------------------------------------
-RUN apt update && apt install --no-install-recommends -y python3.8 python3.8-dev python3-pip \
+RUN apt update \
+    && apt install -y --no-install-recommends software-properties-common \
+    && add-apt-repository --yes ppa:deadsnakes/ppa \
+    && apt update \
+    && apt install --no-install-recommends -y python3.8 python3.8-dev python3-pip \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 \
     && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
@@ -90,9 +94,15 @@ RUN apt install -y bash && \
 #---------------------------------------
 # Installing nodejs via nvm and configuring jupyterlab, default password: 'change-me-asap'
 #---------------------------------------
-RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-RUN export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-RUN nvm install 14 && nvm use 14
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 14.10.1
+RUN mkdir -p $NVM_DIR && wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash && \
+    source $NVM_DIR/nvm.sh && \
+    nvm install $NODE_VERSION && \
+    nvm use $NODE_VERSION
+ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
     jupyter nbextension enable --py widgetsnbextension && \

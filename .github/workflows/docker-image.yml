@@ -20,11 +20,13 @@ jobs:
     - name: Build the cuda 11.0 runtime Docker image
       run: >
            docker build --file docker/Dockerfile 
+           --build-arg TF_PACKAGE=https://github.com/davidenunes/tensorflow-wheels/releases/download/r2.3.cp38.gpu/tensorflow-2.3.0-cp38-cp38-linux_x86_64.whl
            --tag rexhaif/ml-toolbox:latest --tag rexhaif/ml-toolbox:cu110 
            --tag rexhaif/ml-toolbox:cu110-runtime .
     - name: Build the cuda 11.0 devel Docker image
       run: >
            docker build --file docker/Dockerfile 
+           --build-arg TF_PACKAGE=https://github.com/davidenunes/tensorflow-wheels/releases/download/r2.3.cp38.gpu/tensorflow-2.3.0-cp38-cp38-linux_x86_64.whl
            --build-arg BASE_IMAGE=nvidia/cuda:11.0-devel-ubuntu20.04 
            --tag rexhaif/ml-toolbox:cu110-devel .
     - name: Push cuda 11.0 images to dockerhub
@@ -115,7 +117,7 @@ jobs:
            --build-arg BASE_IMAGE=nvidia/cuda:10.2-runtime-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda102/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
            --build-arg PYTORCH_PACKAGE="torch==1.6.0"
-           --build-arg TF_PACKAGE=tensorflow .
+           --build-arg TF_PACKAGE=https://github.com/davidenunes/tensorflow-wheels/releases/download/r2.2.cp38.gpu/tensorflow-2.2.0-cp38-cp38-linux_x86_64.whl .
     - name: Build the cuda 10.2 devel Docker image
       run: >
            docker build --file docker/Dockerfile 
@@ -123,7 +125,7 @@ jobs:
            --build-arg BASE_IMAGE=nvidia/cuda:10.2-devel-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda102/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
            --build-arg PYTORCH_PACKAGE="torch==1.6.0"
-           --build-arg TF_PACKAGE=tensorflow .
+           --build-arg TF_PACKAGE=https://github.com/davidenunes/tensorflow-wheels/releases/download/r2.2.cp38.gpu/tensorflow-2.2.0-cp38-cp38-linux_x86_64.whl .
     - name: Push cuda 10.2 images to dockerhub
       run: >
            echo ${password} | docker login -u ${username} --password-stdin &&
