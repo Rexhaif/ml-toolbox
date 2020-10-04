@@ -103,11 +103,12 @@ RUN mkdir -p $NVM_DIR && wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
+COPY docker/hashpwd.py /workspace/hashpwd.py
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
     jupyter nbextension enable --py widgetsnbextension && \
     jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
-    echo "c.NotebookApp.password = 'sha1:e38cb960008a:2d7c7b65a110ab5b94b3e4a8c98a8c274c9387a2'" > ~/.jupyter/jupyter_notebook_config.py
+    python /workspace/hashpwd.py --password="change-me-asap"
     
 #---------------------------------------
 # Installing rust jupyter kernel
