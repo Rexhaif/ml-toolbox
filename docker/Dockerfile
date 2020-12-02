@@ -140,6 +140,8 @@ RUN ldconfig && \
 RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data
 WORKDIR /workspace
 
+COPY hashpwd.py /workspace/hashpwd.py
+
 EXPOSE 6006 8888
 
 CMD export SHELL=/bin/bash && jupyter notebook --no-browser --ip=0.0.0.0 --port=8888 --allow-root --notebook-dir='/workspace'
