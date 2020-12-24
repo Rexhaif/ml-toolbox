@@ -20,13 +20,13 @@ jobs:
     - name: Build the cuda 11.0 runtime Docker image
       run: >
            docker build --file docker/Dockerfile 
-           --build-arg TF_PACKAGE=https://github.com/davidenunes/tensorflow-wheels/releases/download/r2.3.cp38.gpu/tensorflow-2.3.0-cp38-cp38-linux_x86_64.whl
+           --build-arg TF_FILE=install_tf2.4.0.sh
            --tag rexhaif/ml-toolbox:latest --tag rexhaif/ml-toolbox:cu110 
            --tag rexhaif/ml-toolbox:cu110-runtime .
     - name: Build the cuda 11.0 devel Docker image
       run: >
            docker build --file docker/Dockerfile 
-           --build-arg TF_PACKAGE=https://github.com/davidenunes/tensorflow-wheels/releases/download/r2.3.cp38.gpu/tensorflow-2.3.0-cp38-cp38-linux_x86_64.whl
+           --build-arg TF_FILE=install_tf2.4.0.sh
            --build-arg BASE_IMAGE=nvidia/cuda:11.0-devel-ubuntu20.04 
            --tag rexhaif/ml-toolbox:cu110-devel .
     - name: Push cuda 11.0 images to dockerhub
@@ -53,7 +53,7 @@ jobs:
            --build-arg BASE_IMAGE=nvidia/cuda:10.0-runtime-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda100/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
            --build-arg PYTORCH_PACKAGE="torch==1.6.0+cu92 -f https://download.pytorch.org/whl/torch_stable.html"
-           --build-arg TF_PACKAGE=tensorflow .
+           --build-arg TF_FILE=install_tf2.4.0-cpu.sh .
     - name: Build the cuda 10.0 devel Docker image
       run: >
            docker build --file docker/Dockerfile
@@ -61,7 +61,7 @@ jobs:
            --build-arg BASE_IMAGE=nvidia/cuda:10.0-devel-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda100/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
            --build-arg PYTORCH_PACKAGE="torch==1.6.0+cu92 -f https://download.pytorch.org/whl/torch_stable.html"
-           --build-arg TF_PACKAGE=tensorflow .
+           --build-arg TF_FILE=install_tf2.4.0-cpu.sh .
     - name: Push cuda 10.0 images to dockerhub
       run: >
            echo ${password} | docker login -u ${username} --password-stdin &&
@@ -85,7 +85,7 @@ jobs:
            --build-arg BASE_IMAGE=nvidia/cuda:10.1-runtime-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda101/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
            --build-arg PYTORCH_PACKAGE="torch==1.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html"
-           --build-arg TF_PACKAGE=tensorflow .
+           --build-arg TF_FILE=install_tf2.3.0.sh .
     - name: Build the cuda 10.1 devel Docker image
       run: >
            docker build --file docker/Dockerfile 
@@ -93,7 +93,7 @@ jobs:
            --build-arg BASE_IMAGE=nvidia/cuda:10.1-devel-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda101/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
            --build-arg PYTORCH_PACKAGE="torch==1.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html"
-           --build-arg TF_PACKAGE=tensorflow .
+           --build-arg TF_FILE=install_tf2.3.0.sh .
     - name: Push cuda 10.1 images to dockerhub
       run: >
            echo ${password} | docker login -u ${username} --password-stdin &&
@@ -117,7 +117,7 @@ jobs:
            --build-arg BASE_IMAGE=nvidia/cuda:10.2-runtime-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda102/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
            --build-arg PYTORCH_PACKAGE="torch==1.6.0"
-           --build-arg TF_PACKAGE=https://github.com/davidenunes/tensorflow-wheels/releases/download/r2.2.cp38.gpu/tensorflow-2.2.0-cp38-cp38-linux_x86_64.whl .
+           --build-arg TF_FILE=install_tf2.3.0.sh .
     - name: Build the cuda 10.2 devel Docker image
       run: >
            docker build --file docker/Dockerfile 
@@ -125,7 +125,7 @@ jobs:
            --build-arg BASE_IMAGE=nvidia/cuda:10.2-devel-ubuntu18.04 
            --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda102/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
            --build-arg PYTORCH_PACKAGE="torch==1.6.0"
-           --build-arg TF_PACKAGE=https://github.com/davidenunes/tensorflow-wheels/releases/download/r2.2.cp38.gpu/tensorflow-2.2.0-cp38-cp38-linux_x86_64.whl .
+           --build-arg TF_FILE=install_tf2.3.0.sh .
     - name: Push cuda 10.2 images to dockerhub
       run: >
            echo ${password} | docker login -u ${username} --password-stdin &&
@@ -150,7 +150,7 @@ jobs:
            --build-arg JAX_PACKAGE=jaxlib
            --build-arg CUDNN_INSTALL="echo 'No Cudnn install'"
            --build-arg PYTORCH_PACKAGE="torch==1.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html"
-           --build-arg TF_PACKAGE="https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow_cpu-2.3.0-cp38-cp38-manylinux2010_x86_64.whl" .
+           --build-arg TF_FILE=install_tf2.4.0-cpu.sh .
     - name: Push cpu-only image to dockerhub
       run: echo ${password} | docker login -u ${username} --password-stdin && docker push rexhaif/ml-toolbox:cpu
       env:
