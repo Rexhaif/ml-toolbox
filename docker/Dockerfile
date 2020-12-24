@@ -79,12 +79,6 @@ RUN python -m pip --no-cache-dir install --upgrade \
     pytorch_lightning
 
 #----------------------------------------
-# Copying tf install script
-#----------------------------------------
-ARG TF_FILE=install_tf2.4.0.sh
-COPY docker/${TF_FILE} /workspace
-
-#----------------------------------------
 # Install better shell
 #----------------------------------------
 RUN apt install -y bash && \
@@ -138,6 +132,10 @@ RUN ldconfig && \
 # Finalizing
 #---------------------------------------
 RUN mkdir /workspace
+
+ARG TF_FILE=install_tf2.4.0.sh
+COPY docker/${TF_FILE} /workspace
+
 COPY docker/hashpwd.py /workspace
 RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data && python /workspace/hashpwd.py --password="change-me-asap"
 WORKDIR /workspace
