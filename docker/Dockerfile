@@ -62,15 +62,11 @@ RUN python -m pip --no-cache-dir install --upgrade \
 RUN apt install -y liblapacke-dev libsuitesparse-dev openssh-client
 
 #----------------------------------------
-# Install pytorch, tensorflow, jax, haiku, trax and nlp libraries
+# Install pytorch, jax, haiku, trax and nlp libraries
 #----------------------------------------
 # Pytorch
 ARG PYTORCH_PACKAGE=torch
 RUN python -m pip --no-cache-dir install --upgrade $PYTORCH_PACKAGE
-
-# Tensorflow
-ARG TF_PACKAGE=tensorflow
-RUN python -m pip --no-cache-dir install --upgrade $TF_PACKAGE
 
 # Google's JAX
 ARG JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda110/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
@@ -81,6 +77,12 @@ RUN python -m pip --no-cache-dir install --upgrade \
     jax \
     transformers nlp \
     pytorch_lightning
+
+#----------------------------------------
+# Copying tf install script
+#----------------------------------------
+ARG TF_FILE=install_tf2.4.0.sh
+COPY docker/${TF_FILE} /workspace
 
 #----------------------------------------
 # Install better shell
@@ -103,7 +105,6 @@ RUN mkdir -p $NVM_DIR && wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
-COPY docker/hashpwd.py /workspace/hashpwd.py
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
     jupyter nbextension enable --py widgetsnbextension && \
@@ -139,6 +140,7 @@ RUN ldconfig && \
 #---------------------------------------
 RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data
 WORKDIR /workspace
+COPY docker/hashpwd.py /workspace/hashpwd.py
 
 EXPOSE 6006 8888
 
