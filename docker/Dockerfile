@@ -104,6 +104,7 @@ RUN mkdir -p $NVM_DIR && wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/
     nvm use $NODE_VERSION
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+COPY docker/hashpwd.py /workspace/hashpwd.py
 
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
@@ -140,9 +141,6 @@ RUN ldconfig && \
 #---------------------------------------
 RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data
 WORKDIR /workspace
-COPY docker/hashpwd.py /workspace/hashpwd.py
-
-COPY docker/hashpwd.py /workspace/hashpwd.py
 
 EXPOSE 6006 8888
 
