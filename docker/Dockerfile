@@ -63,7 +63,7 @@ RUN apt install -y liblapacke-dev libsuitesparse-dev openssh-client
 
 #----------------------------------------
 # Install pytorch, jax, haiku, trax and nlp libraries
-#----------------------------------------
+
 # Pytorch
 ARG PYTORCH_PACKAGE=torch
 RUN python -m pip --no-cache-dir install --upgrade $PYTORCH_PACKAGE
@@ -140,6 +140,8 @@ RUN ldconfig && \
 #---------------------------------------
 RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data
 WORKDIR /workspace
+COPY docker/hashpwd.py /workspace/hashpwd.py
+
 COPY docker/hashpwd.py /workspace/hashpwd.py
 
 EXPOSE 6006 8888
