@@ -140,7 +140,7 @@ RUN ldconfig && \
 RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data
 WORKDIR /workspace
 
-COPY hashpwd.py /workspace/hashpwd.py
+COPY docker/hashpwd.py /workspace/hashpwd.py
 
 EXPOSE 6006 8888
 
