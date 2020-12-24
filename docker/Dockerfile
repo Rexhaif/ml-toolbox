@@ -104,13 +104,11 @@ RUN mkdir -p $NVM_DIR && wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/
     nvm use $NODE_VERSION
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
-COPY docker/hashpwd.py /workspace/hashpwd.py
 
 RUN jupyter notebook --generate-config && \
     pip install ipywidgets && \ 
     jupyter nbextension enable --py widgetsnbextension && \
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
-    python /workspace/hashpwd.py --password="change-me-asap"
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager
     
 #---------------------------------------
 # Installing rust jupyter kernel
@@ -139,7 +137,8 @@ RUN ldconfig && \
 #---------------------------------------
 # Finalizing
 #---------------------------------------
-RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data
+COPY docker/hashpwd.py /workspace
+RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data && python /workspace/hashpwd.py --password="change-me-asap"
 WORKDIR /workspace
 
 EXPOSE 6006 8888
