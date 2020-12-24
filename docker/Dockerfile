@@ -137,6 +137,7 @@ RUN ldconfig && \
 #---------------------------------------
 # Finalizing
 #---------------------------------------
+RUN mkdir /workspace
 COPY docker/hashpwd.py /workspace
 RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data && python /workspace/hashpwd.py --password="change-me-asap"
 WORKDIR /workspace
