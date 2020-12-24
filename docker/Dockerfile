@@ -142,6 +142,6 @@ COPY docker/hashpwd.py /workspace
 RUN mkdir -p /workspace/notebooks && mkdir -p /workspace/data && python /workspace/hashpwd.py --password="change-me-asap"
 WORKDIR /workspace
 
-EXPOSE 6006 8888
+EXPOSE 8888 6006
 
 CMD export SHELL=/bin/bash && jupyter notebook --no-browser --ip=0.0.0.0 --port=8888 --allow-root --notebook-dir='/workspace'
