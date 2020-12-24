@@ -64,6 +64,9 @@ RUN apt install -y liblapacke-dev libsuitesparse-dev openssh-client
 #----------------------------------------
 # Installing cudnn8
 #----------------------------------------
+ARG CUDNN_INSTALL="wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb \
+&& apt install --yes ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && apt update && apt install --yes --no-install-recommends \
+libcudnn8=8.0.4.30-1+cuda11.0 libcudnn8-dev=8.0.4.30-1+cuda11.0"
 RUN $CUDNN_INSTALL
 
 #----------------------------------------
