@@ -84,7 +84,7 @@ RUN python -m pip --no-cache-dir install --upgrade \
 RUN apt install -y bash && \
     chsh -s /bin/bash root && \
     wget -O ~/install.sh https://starship.rs/install.sh && \
-    bash ~/install.sh -y && \
+    sh ~/install.sh -y && \
     echo 'eval "$(starship init bash)"' >> ~/.bashrc
 
 #---------------------------------------
