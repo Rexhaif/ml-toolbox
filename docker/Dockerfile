@@ -142,4 +142,4 @@ WORKDIR /workspace
 
 EXPOSE 8888 6006
 
-CMD export SHELL=/bin/bash && jupyter notebook --no-browser --ip=0.0.0.0 --port=8888 --allow-root --notebook-dir='/workspace'
+CMD export SHELL=/bin/bash && jupyter lab --no-browser --ip=0.0.0.0 --port=8888 --allow-root --notebook-dir='/workspace'
