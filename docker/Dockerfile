@@ -47,6 +47,7 @@ RUN python -m pip --no-cache-dir install --upgrade \
     numpy \
     scipy \
     pandas \
+    nnabla \
     pyarrow \
     numba \
     cloudpickle \
@@ -69,7 +70,7 @@ ARG PYTORCH_PACKAGE=torch
 RUN python -m pip --no-cache-dir install --upgrade $PYTORCH_PACKAGE
 
 # Google's JAX
-ARG JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda110/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
+ARG JAX_PACKAGE=nnabla-ext-cuda110
 RUN python -m pip --no-cache-dir install --upgrade $JAX_PACKAGE
 
 # Other packages
