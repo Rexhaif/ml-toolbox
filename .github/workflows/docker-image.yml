@@ -22,6 +22,7 @@ jobs:
           --build-arg TF_FILE=install_tf2.4.0.sh
           --build-arg BASE_IMAGE=nvidia/cuda:11.1.1-cudnn8-runtime-ubuntu20.04
           --build-arg PYTORCH_PACKAGE="torch==1.11.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html"
+          --tag rexhaif/ml-toolbox:latest
           --tag rexhaif/ml-toolbox:cu110
           --tag rexhaif/ml-toolbox:cu110-runtime
           --tag rexhaif/ml-toolbox:cu110-runtime-${GITHUB_SHA}
@@ -41,7 +42,7 @@ jobs:
       - name: Push cuda 11.0 images to dockerhub
         run: >
           echo ${password} | docker login -u ${username} --password-stdin &&
-          docker push rexhaif/ml-toolbox:latest-cu110 &&
+          docker push rexhaif/ml-toolbox:latest &&
           docker push rexhaif/ml-toolbox:cu110 &&
           docker push rexhaif/ml-toolbox:cu110-runtime &&
           docker push rexhaif/ml-toolbox:cu110-runtime-${GITHUB_SHA}
