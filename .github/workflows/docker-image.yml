@@ -61,7 +61,7 @@ jobs:
            docker build
            --file docker/Dockerfile
            --build-arg BASE_IMAGE=nvidia/cuda:10.1-runtime-ubuntu18.04
-           --build-arg PYTORCH_PACKAGE="torch==1.8.1+cu101 -f https://download.pytorch.org/whl/torch_stable.html"
+           --build-arg PYTORCH_PACKAGE="torch"
            --build-arg TF_FILE=install_tf2.3.0.sh
            --tag rexhaif/ml-toolbox:cu101
            --tag rexhaif/ml-toolbox:cu101-runtime
@@ -72,7 +72,7 @@ jobs:
            docker build
            --file docker/Dockerfile
            --build-arg BASE_IMAGE=nvidia/cuda:10.1-devel-ubuntu18.04
-           --build-arg PYTORCH_PACKAGE="torch==1.8.1+cu101 -f https://download.pytorch.org/whl/torch_stable.html"
+           --build-arg PYTORCH_PACKAGE="torch"
            --build-arg TF_FILE=install_tf2.3.0.sh
            --tag rexhaif/ml-toolbox:cu101-devel
            --tag rexhaif/ml-toolbox:cu101-devel-${GITHUB_SHA}
