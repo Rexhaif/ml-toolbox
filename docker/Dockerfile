@@ -42,6 +42,7 @@ SHELL ["/bin/bash", "-c"]
 #----------------------------------------
 RUN python -m pip --no-cache-dir install --upgrade \
     pip \
+    virtualenv \
     setuptools && \
     python -m pip --no-cache-dir install --upgrade \
     numpy \
