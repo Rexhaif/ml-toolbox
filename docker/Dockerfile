@@ -40,8 +40,8 @@ SHELL ["/bin/bash", "-c"]
 #----------------------------------------
 # Install python libs and stuff
 #----------------------------------------
-RUN python -m pip --no-cache-dir install --upgrade virtualenv && \
-    python -m pip --no-cache-dir install --upgrade pip && \
+RUN python -m pip --no-cache-dir install --upgrade pip && \
+    python -m pip --no-cache-dir install --upgrade virtualenv && \
     python -m pip --no-cache-dir install --upgrade setuptools && \
     python -m pip --no-cache-dir install --upgrade \
     numpy \
