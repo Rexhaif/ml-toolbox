@@ -52,6 +52,45 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+  cuda10-1:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the cuda 10.1 runtime Docker image
+      run: >
+           docker build
+           --file docker/Dockerfile
+           --build-arg BASE_IMAGE=nvidia/cuda:10.1-runtime-ubuntu18.04
+           --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda101/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
+           --build-arg PYTORCH_PACKAGE="torch==1.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html"
+           --build-arg TF_FILE=install_tf2.3.0.sh
+           --tag rexhaif/ml-toolbox:cu101
+           --tag rexhaif/ml-toolbox:cu101-runtime
+           --tag rexhaif/ml-toolbox:cu101-runtime-${GITHUB_SHA}
+           .
+    - name: Build the cuda 10.1 devel Docker image
+      run: >
+           docker build
+           --file docker/Dockerfile
+           --build-arg BASE_IMAGE=nvidia/cuda:10.1-devel-ubuntu18.04
+           --build-arg JAX_PACKAGE=https://storage.googleapis.com/jax-releases/cuda101/jaxlib-0.1.52-cp38-none-manylinux2010_x86_64.whl
+           --build-arg PYTORCH_PACKAGE="torch==1.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html"
+           --build-arg TF_FILE=install_tf2.3.0.sh
+           --tag rexhaif/ml-toolbox:cu101-devel
+           --tag rexhaif/ml-toolbox:cu101-devel-${GITHUB_SHA}
+           .
+    - name: Push cuda 10.1 images to dockerhub
+      run: >
+           echo ${password} | docker login -u ${username} --password-stdin &&
+           docker push rexhaif/ml-toolbox:cu101 &&
+           docker push rexhaif/ml-toolbox:cu101-runtime &&
+           docker push rexhaif/ml-toolbox:cu101-runtime-${GITHUB_SHA} &&
+           docker push rexhaif/ml-toolbox:cu101-devel &&
+           docker push rexhaif/ml-toolbox:cu101-devel-${GITHUB_SHA}
+      env:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+  
   cpu:
     runs-on: ubuntu-latest
     steps:
