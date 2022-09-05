@@ -70,10 +70,6 @@ RUN apt install -y liblapacke-dev libsuitesparse-dev openssh-client
 ARG PYTORCH_PACKAGE=torch
 RUN python -m pip --no-cache-dir install --upgrade $PYTORCH_PACKAGE
 
-# Google's JAX
-ARG JAX_PACKAGE=nnabla-ext-cuda110
-RUN python -m pip --no-cache-dir install --upgrade $JAX_PACKAGE
-
 # Other packages
 RUN python -m pip --no-cache-dir install --upgrade \
     jax \
