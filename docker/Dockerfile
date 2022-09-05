@@ -49,7 +49,6 @@ RUN python -m pip --no-cache-dir install --upgrade pip && \
     numpy \
     scipy \
     pandas \
-    nnabla \
     pyarrow \
     numba \
     cloudpickle \
