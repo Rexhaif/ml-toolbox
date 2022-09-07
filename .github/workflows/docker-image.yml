@@ -45,7 +45,7 @@ jobs:
           docker push rexhaif/ml-toolbox:latest &&
           docker push rexhaif/ml-toolbox:cu110 &&
           docker push rexhaif/ml-toolbox:cu110-runtime &&
-          docker push rexhaif/ml-toolbox:cu110-runtime-${GITHUB_SHA}
+          docker push rexhaif/ml-toolbox:cu110-runtime-${GITHUB_SHA} &&
           docker push rexhaif/ml-toolbox:cu110-devel &&
           docker push rexhaif/ml-toolbox:cu110-devel-${GITHUB_SHA}
         env:
